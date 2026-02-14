@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine For You ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(-45deg, #ff4b7d, #ff758c, #ff7eb3, #ff9a9e);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+.container {
+    text-align: center;
+    z-index: 10;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 3rem;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px white; }
+    to { text-shadow: 0 0 30px white, 0 0 50px pink; }
+}
+
+p {
+    margin-top: 15px;
+    font-size: 1.2rem;
+}
+
+.buttons {
+    margin-top: 30px;
+}
+
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.yes {
+    background: white;
+    color: #ff4b7d;
+}
+
+.no {
+    background: #ff1744;
+    color: white;
+    position: relative;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+#countdown {
+    margin-top: 15px;
+    font-size: 1rem;
+}
+
+/* Falling Hearts */
+.heart {
+    position: absolute;
+    color: rgba(255,255,255,0.8);
+    font-size: 20px;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% { transform: translateY(-10vh); }
+    100% { transform: translateY(110vh); }
+}
+
+/* Love Letter */
+.letter {
+    position: fixed;
+    bottom: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    color: #ff4b7d;
+    padding: 30px;
+    border-radius: 20px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    transition: 0.8s;
+    z-index: 5;
+}
+
+.letter.show {
+    bottom: 20%;
+}
+
+.music-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: white;
+    color: #ff4b7d;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+}
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="container">
+    <h1>Phương Uyên có yêu a hông? 💍</h1>
+    <p>Valentine này anh không hứa những điều to lớn, chỉ hứa sẽ yêu em nhiều hơn hôm qua một chút.❤️</p>
+
+    <div id="countdown"></div>
+
+    <div class="buttons">
+        <button class="yes" onclick="acceptLove()">Cóa 💖</button>
+        <button class="no" id="noBtn">Hông 😝</button>
+    </div>
+</div>
+
+<div class="letter" id="letter">
+    <h2>Gửi béiu 💌</h2>
+    <p>
+        Cảm ơn em đã đến bên anh.Chúc bé iu của anh Valentine vui vẻ,ngày càng xinh đẹp nha.
+        Từ nay về sau, hãy để anh được yêu thương và che chở cho em nhé,lov PU ❤️
+    </p>
+</div>
+<button class="music-btn" onclick="toggleMusic()">🎵</button>
+
+<audio id="bgMusic" loop>
+    <source src="matmoc.mp3.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* Countdown */
+const startDate = new Date("2026-01-09");
+const countdown = document.getElementById("countdown");
+
+setInterval(() => {
+    const now = new Date();
+    const diff = now - startDate;
+    const days = Math.floor(diff / (1000*60*60*24));
+    countdown.innerHTML = "Chúng ta đã bên nhau " + days + " ngày ❤";
+}, 1000);
+
+/* Falling Hearts */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤";
+    heart.style.left = Math.random()*100 + "vw";
+    heart.style.animationDuration = (Math.random()*3+2)+"s";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),5000);
+}
+setInterval(createHeart, 200);
+
+/* No button chạy */
+const noBtn = document.getElementById("noBtn");
+noBtn.addEventListener("mouseover", () => {
+    noBtn.style.position = "absolute";
+    noBtn.style.top = Math.random()*80 + "vh";
+    noBtn.style.left = Math.random()*80 + "vw";
+});
+
+/* Accept love */
+function acceptLove() {
+    document.querySelector(".buttons").style.display = "none";
+    document.getElementById("letter").classList.add("show");
+    launchFireworks();
+    music.play();
+}
+
+
+
+/* Music */
+const music = document.getElementById("bgMusic");
+function toggleMusic(){
+    if(music.paused) music.play();
+    else music.pause();
+}
+
+/* Fireworks */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+function launchFireworks(){
+    for(let i=0;i<100;i++){
+        setTimeout(()=>{
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.arc(Math.random()*canvas.width,
+                    Math.random()*canvas.height,
+                    3,0,2*Math.PI);
+            ctx.fill();
+        },i*20);
+    }
+}
+</script>
+
+</body>
+</html>
